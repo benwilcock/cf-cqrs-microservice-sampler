@@ -1,9 +1,7 @@
 # Folders
-/build
+build
 .gradle
 .idea
-/unused
-**/.DS_Store
 
 # File Patterns
 *.class
@@ -13,9 +11,8 @@
 .mtj.tmp/
 
 # Package Files #
-#*.jar
-#*.war
-#*.ear
+*.war
+*.ear
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

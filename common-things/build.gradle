@@ -1,0 +1,24 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+    }
+}
+
+jar {
+    baseName = 'product-domain-events'
+}
+
+dependencies {
+    compile 'ch.qos.logback:logback-classic:1.1.5'
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+task image(){
+    // Dummy task to allow global commands to work as intended
+}

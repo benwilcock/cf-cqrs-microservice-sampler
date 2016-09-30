@@ -1,0 +1,27 @@
+version: '2'
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysqldb
+    ports:
+     - "3306:3306"
+    environment:
+     - MYSQL_ROOT_PASSWORD=password
+     - MYSQL_USER=user
+     - MYSQL_PASSWORD=pass
+     - MYSQL_DATABASE=testdb
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+     - "5672:5672"
+     - "15672:15672"
+    environment:
+     - RABBITMQ_DEFAULT_USER=user
+     - RABBITMQ_DEFAULT_PASS=pass
+     - RABBITMQ_DEFAULT_VHOST=testvhost
+  mongodb:
+    image: mongo:2.4
+    container_name: mongodb
+    ports:
+     - "27017:27017"

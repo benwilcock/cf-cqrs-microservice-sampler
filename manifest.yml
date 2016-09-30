@@ -1,0 +1,12 @@
+---
+buildpack: java_buildpack
+services:
+  - config
+  - rabbit
+applications:
+- name: query
+  memory: 1G
+  path: ./query-side/build/libs/product-query-side.jar
+  services:
+    - mysql
+    

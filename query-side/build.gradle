@@ -1,0 +1,97 @@
+buildscript {
+    ext {
+        springBootVersion = '1.4.1.RELEASE'
+        springCloudConnectorsVersion = '1.2.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/plugins-release/" }
+        maven { url "https://repo.spring.io/libs-release/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE")
+        classpath('se.transmode.gradle:gradle-docker:1.2')
+    }
+}
+
+group = 'benwilcock'
+apply plugin: 'spring-boot'
+apply plugin: 'docker'
+apply plugin: "io.spring.dependency-management"
+
+jar {
+    baseName = 'product-query-side'
+    archiveName = 'product-query-side.jar'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.RELEASE"
+        mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:1.1.1.RELEASE"
+    }
+}
+
+dependencies {
+    compile project(':common-things')
+
+    // Axon CQRS
+    compile("org.axonframework:axon-amqp:2.4.3")
+
+    // JPA Persistence
+    runtime "mysql:mysql-connector-java"
+
+    // String Boot
+    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-amqp:${springBootVersion}")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+
+    // Spring Cloud Connectors
+    compile "org.springframework.cloud:spring-cloud-spring-service-connector:${springCloudConnectorsVersion}"
+    compile "org.springframework.cloud:spring-cloud-localconfig-connector:${springCloudConnectorsVersion}"
+    compile "org.springframework.cloud:spring-cloud-cloudfoundry-connector:${springCloudConnectorsVersion}"
+
+    // Pivotal Spring Cloud Services
+    compile "io.pivotal.spring.cloud:spring-cloud-services-starter-config-client"
+}
+
+def JvmSettings = [
+        "-Dspring.cloud.appId=product-query-side",
+        "-Dspring.profiles.active=cloud",
+        "-Dspring.cloud.database=mysql://user:pass@localhost:3306/testdb",
+        "-Dspring.cloud.rabbitmq=amqp://user:pass@localhost:5672/testvhost",
+        "-DINSTANCE_GUID=17ba41b0-f98d-49f1-8cd3-02899b8fb8aa",
+        "-DINSTANCE_INDEX=0"
+]
+
+test {
+    jvmArgs = JvmSettings
+}
+
+bootRun {
+    jvmArgs = JvmSettings
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+task image(type: Docker, dependsOn: assemble){
+    push = false
+    applicationName = jar.baseName
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst{
+        copy {
+            from jar
+            into stageDir
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/libs-release/" }
+}
