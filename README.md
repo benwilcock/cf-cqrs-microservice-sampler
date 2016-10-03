@@ -21,6 +21,7 @@ I'm in the process of porting the original code from here: https://github.com/be
 
  - Query Side: Working
  - Command Side: Working
+ - Integration Test: Working
  - Spring Cloud Config: Working
  - Spring Cloud Registry: Not Started
  - Spring Cloud Circuit Breaker: Not Started
