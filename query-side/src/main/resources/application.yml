@@ -15,4 +15,4 @@ spring:
 logging:
   level:
     io:
-      benwilcock: DEBUG
+      benwilcock: INFO

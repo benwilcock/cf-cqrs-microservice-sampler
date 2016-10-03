@@ -10,5 +10,8 @@ spring:
 
 logging:
   level:
+    org:
+      springframework:
+        web: INFO
     io:
-      benwilcock: DEBUG
+      benwilcock: INFO

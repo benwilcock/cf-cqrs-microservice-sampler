@@ -17,7 +17,7 @@ import java.util.Arrays;
  * Created by ben on 19/01/16.
  */
 @RestController
-@RequestMapping("/products")
+@RequestMapping()
 public class ProductRestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProductRestController.class);
