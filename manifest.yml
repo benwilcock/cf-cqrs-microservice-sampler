@@ -9,4 +9,8 @@ applications:
   path: ./query-side/build/libs/product-query-side.jar
   services:
     - mysql
-    
+- name: command
+  memory: 1G
+  path: ./command-side/build/libs/product-command-side.jar
+  services:
+    - mongo

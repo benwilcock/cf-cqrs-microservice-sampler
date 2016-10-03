@@ -28,31 +28,32 @@ dependencyManagement {
 
 repositories {
     maven {
-      url "https://repo.spring.io/plugins-release"
+        url "https://repo.spring.io/plugins-release"
     }
 }
 
 jar {
-    baseName = 'product-query-side'
-    archiveName = 'product-query-side.jar'
+    baseName = 'product-command-side'
+    archiveName = 'product-command-side.jar'
 }
+
 
 dependencies {
     compile project(':common-things')
 
     // Axon CQRS
     compile("org.axonframework:axon-amqp:2.4.3")
-
-    // JPA Persistence
-    runtime "mysql:mysql-connector-java"
+    compile("org.axonframework:axon-mongo:2.4.3")
 
     // String Boot
     compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
-    compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-amqp:${springBootVersion}")
-    testCompile("org.springframework.boot:spring-boot-starter-test")
+
+    //Unsure what needs these TBH...
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    compile("com.h2database:h2")
 
     // Spring Cloud Connectors
     compile "org.springframework.cloud:spring-cloud-spring-service-connector:${springCloudConnectorsVersion}"
@@ -61,14 +62,17 @@ dependencies {
 
     // Pivotal Spring Cloud Services
     compile "io.pivotal.spring.cloud:spring-cloud-services-starter-config-client"
+
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.axonframework:axon-test:2.4.3")
 }
 
 def JvmSettings = [
-        "-Dspring.cloud.appId=product-query-side",
+        "-Dspring.cloud.appId=product-command-side",
         "-Dspring.profiles.active=cloud",
-        "-Dspring.cloud.database=mysql://user:pass@localhost:3306/testdb",
         "-Dspring.cloud.rabbitmq=amqp://user:pass@localhost:5672/testvhost",
-        "-DINSTANCE_GUID=3DCA161E-903F-4A65-BAEF-66C8E69298A5",
+        "-Dspring.cloud.mongodb=mongodb://localhost:27017/testdb",
+        "-DINSTANCE_GUID=6AE34479-A77E-4BBC-8E29-16D57AEBB01D",
         "-DINSTANCE_INDEX=0"
 ]
 
@@ -84,7 +88,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
 
-task image(type: Docker, dependsOn: assemble){
+task image(type: Docker, dependsOn: build){
     push = false
     applicationName = jar.baseName
     dockerfile = file('src/main/docker/Dockerfile')
@@ -95,3 +99,22 @@ task image(type: Docker, dependsOn: assemble){
         }
     }
 }
+
+//dependencies {
+//    compile project(':common-things')
+//    compile("org.axonframework:axon-amqp:2.4.3")
+//    compile("org.axonframework:axon-mongo:2.4.3")
+//    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+//    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+//    compile("org.springframework.boot:spring-boot-starter-jetty:${springBootVersion}")
+//    compile("org.springframework.boot:spring-boot-starter-amqp:${springBootVersion}")
+//    compile("org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}")
+//    compile("org.springframework.retry:spring-retry")
+//    compile("org.springframework.boot:spring-boot-starter-aop:${springBootVersion}")
+//    compile("org.springframework.cloud:spring-cloud-starter-eureka")
+//    compile("org.springframework.cloud:spring-cloud-starter-config")
+//    testCompile("org.springframework.boot:spring-boot-starter-test")
+//    testCompile("org.axonframework:axon-test:2.4.3")
+//}
+
+

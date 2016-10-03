@@ -1,1 +1,18 @@
+server:
+  port: 9002
+
 message: Greetings from the PRODUCT-QUERY-SIDE microservice [using the LOCAL FILE config].
+
+spring:
+  application:
+    exchange: product.events.fanout.exchange
+    terminal: product.axon.terminal
+    queue: event.stream
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+logging:
+  level:
+    io:
+      benwilcock: DEBUG

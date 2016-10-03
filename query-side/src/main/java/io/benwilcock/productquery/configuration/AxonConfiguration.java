@@ -35,16 +35,6 @@ class AxonConfiguration {
     private String terminalName;
 
 
-    /*
-    @Value("${spring.application.queue}")
-    private String queueName;
-
-    @Bean
-    XStreamSerializer xmlSerializer() {
-        return new XStreamSerializer();
-    }*/
-
-
     @Bean
     JacksonSerializer axonJsonSerializer() {
         return new JacksonSerializer();
@@ -78,7 +68,6 @@ class AxonConfiguration {
     EventBusTerminal terminal() {
         SpringAMQPTerminal terminal = new SpringAMQPTerminal();
         terminal.setConnectionFactory(connectionFactory);
-        //terminal.setSerializer(xmlSerializer());
         terminal.setSerializer(axonJsonSerializer());
         terminal.setExchangeName(terminalName);
         terminal.setListenerContainerLifecycleManager(listenerContainerLifecycleManager());

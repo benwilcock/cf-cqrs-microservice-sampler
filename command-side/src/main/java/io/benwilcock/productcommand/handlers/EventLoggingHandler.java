@@ -1,4 +1,4 @@
-package io.benwilcock.productquery.handlers;
+package io.benwilcock.productcommand.handlers;
 
 import io.benwilcock.productevents.events.ProductAddedEvent;
 import io.benwilcock.productevents.events.ProductSaleableEvent;
