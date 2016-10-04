@@ -1,1 +1,1 @@
-include "common-things", "command-side", "query-side", "integration-test"
+include "common-things", "config-service","command-side", "query-side", "integration-test"
