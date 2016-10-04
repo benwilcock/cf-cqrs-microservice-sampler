@@ -24,6 +24,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -37,7 +38,8 @@ import javax.persistence.PersistenceContext;
  */
 @Configuration
 @AnnotationDriven
-@EnableTransactionManagement
+// @EnableTransactionManagement
+@EntityScan("org.axonframework.eventstore.jpa")
 public class AxonConfiguration {
 
     private static final String AMQP_CONFIG_KEY = "AMQP.Config";
@@ -48,7 +50,7 @@ public class AxonConfiguration {
     @Value("${spring.application.exchange}")
     private String exchangeName;
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "default")
     EntityManager entityManager;
 
     @Bean
@@ -64,11 +66,12 @@ public class AxonConfiguration {
     }
 
     @Bean
-    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration(PlatformTransactionManager transactionManager) {
+    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration() {
+        //removed PlatformTransactionManager transactionManager from signature.
         SpringAMQPConsumerConfiguration cfg = new SpringAMQPConsumerConfiguration();
-        cfg.setTransactionManager(transactionManager);
+        // cfg.setTransactionManager(transactionManager);
         cfg.setQueueName(queueName);
-        cfg.setTxSize(10);
+        // cfg.setTxSize(10);
         return cfg;
     }
 
@@ -86,7 +89,7 @@ public class AxonConfiguration {
         terminal.setConnectionFactory(connectionFactory);
         terminal.setExchangeName(exchangeName);
         terminal.setDurable(true);
-        terminal.setTransactional(true);
+        // terminal.setTransactional(true);
         terminal.setSerializer(jacksonSerializer);
         terminal.setListenerContainerLifecycleManager(listenerContainerLifecycleManager);
         return terminal;
@@ -98,11 +101,23 @@ public class AxonConfiguration {
     }
 
     @Bean
-    JpaEventStore jpaEventStore(JacksonSerializer jacksonSerializer){
+    ContainerManagedEntityManagerProvider containerManagedEntityManagerProvider(){
         ContainerManagedEntityManagerProvider containerManagedEntityManagerProvider = new ContainerManagedEntityManagerProvider();
         containerManagedEntityManagerProvider.setEntityManager(entityManager);
+        return containerManagedEntityManagerProvider;
+    }
+
+    @Bean
+    JpaEventStore jpaEventStore(JacksonSerializer jacksonSerializer, ContainerManagedEntityManagerProvider containerManagedEntityManagerProvider){
         JpaEventStore jpaEventStore = new JpaEventStore(containerManagedEntityManagerProvider, jacksonSerializer);
         return jpaEventStore;
+    }
+
+    @Bean
+    EventSourcingRepository<ProductAggregate> productEventSourcingRepository(JpaEventStore eventStore, EventBus eventBus) {
+        EventSourcingRepository<ProductAggregate> repo = new EventSourcingRepository<ProductAggregate>(ProductAggregate.class, eventStore);
+        repo.setEventBus(eventBus);
+        return repo;
     }
 
     @Bean
@@ -130,13 +145,6 @@ public class AxonConfiguration {
         admin.declareQueue(eventStream);
         admin.declareBinding(binding);
         return admin;
-    }
-
-    @Bean
-    EventSourcingRepository<ProductAggregate> productEventSourcingRepository(JpaEventStore eventStore, EventBus eventBus) {
-        EventSourcingRepository<ProductAggregate> repo = new EventSourcingRepository<ProductAggregate>(ProductAggregate.class, eventStore);
-        repo.setEventBus(eventBus);
-        return repo;
     }
 
     @Bean

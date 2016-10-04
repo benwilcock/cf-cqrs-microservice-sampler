@@ -27,7 +27,7 @@ public class ProductRestController {
     @Autowired
     CommandGateway commandGateway;
 
-    @Transactional
+    // @Transactional
     @RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
     public void add(@PathVariable(value = "id") String id,
                     @RequestParam(value = "name", required = true) String name,

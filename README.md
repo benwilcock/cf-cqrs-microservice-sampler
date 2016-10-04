@@ -19,9 +19,9 @@ It combines together all of the following elements in order to produce one logic
 
 I'm in the process of porting the original code from here: https://github.com/benwilcock/microservice-sampler
 
- - Query Side: Working
- - Command Side: Working
- - Integration Test: Working
+ - Query Side: Working?
+ - Command Side: **Broken!**
+ - Integration Test: Broken
  - Spring Cloud Config: Working
  - Spring Cloud Registry: Not Started
  - Spring Cloud Circuit Breaker: Not Started
