@@ -8,6 +8,8 @@ import org.axonframework.repository.ConcurrencyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +19,7 @@ import java.util.Arrays;
  * Created by ben on 19/01/16.
  */
 @RestController
-@RequestMapping()
+@RequestMapping
 public class ProductRestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProductRestController.class);
@@ -25,6 +27,7 @@ public class ProductRestController {
     @Autowired
     CommandGateway commandGateway;
 
+    @Transactional
     @RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
     public void add(@PathVariable(value = "id") String id,
                     @RequestParam(value = "name", required = true) String name,

@@ -7,6 +7,17 @@ spring:
     application:
         exchange: product.events.fanout.exchange
         queue: product.default.queue
+    datasource:
+      testWhileIdle: true
+      validationQuery: SELECT 1
+    jpa:
+      database:
+      show-sql: true
+      hibernate:
+        naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL5Dialect
 
 logging:
   level:

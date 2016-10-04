@@ -53,7 +53,9 @@ public class AssertSystemHealthTest {
                 statusCode(HttpStatus.SC_OK).
                 body("status", Matchers.is("UP")).
                 body("rabbit.status", Matchers.is("UP")).
-                body("mongo.status", Matchers.is("UP"));
+                body("configServer.status", Matchers.is("UP")).
+                body("db.status", Matchers.is("UP")).
+                body("db.database", Matchers.is("MySQL"));
 
 //        given().
 //                port(Statics.PORT).
@@ -87,9 +89,11 @@ public class AssertSystemHealthTest {
                 then().
                 statusCode(HttpStatus.SC_OK).
                 body("status", Matchers.is("UP")).
+                body("configServer.status", Matchers.is("UP")).
                 body("db.status", Matchers.is("UP")).
                 body("rabbit.status", Matchers.is("UP")).
                 body("db.database", Matchers.is("MySQL"));
+
 
 //        given().
 //                baseUri(Statics.QUERY_APP_ROUTE).

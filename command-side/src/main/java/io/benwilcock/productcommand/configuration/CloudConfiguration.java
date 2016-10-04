@@ -3,7 +3,6 @@ package io.benwilcock.productcommand.configuration;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.cloud.config.java.AbstractCloudConfig;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.mongodb.MongoDbFactory;
 
 import javax.sql.DataSource;
 
@@ -19,9 +18,15 @@ public class CloudConfiguration extends AbstractCloudConfig {
 
     //Connect to the only available database service
     @Bean
-    public MongoDbFactory dataSource() {
-        return connectionFactory().mongoDbFactory();
+    public DataSource dataSource() {
+        return connectionFactory().dataSource();
     }
+
+    //Connect to the only available database service
+//    @Bean
+//    public MongoDbFactory mongoSource() {
+//        return connectionFactory().mongoDbFactory();
+//    }
 
     //Connect to the only available RabbitMQ service
     @Bean

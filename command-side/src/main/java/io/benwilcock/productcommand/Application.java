@@ -2,7 +2,9 @@ package io.benwilcock.productcommand;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Created by ben on 19/01/16.

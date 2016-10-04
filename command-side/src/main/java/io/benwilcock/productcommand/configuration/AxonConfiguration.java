@@ -7,6 +7,7 @@ import org.axonframework.commandhandling.annotation.AggregateAnnotationCommandHa
 import org.axonframework.commandhandling.annotation.AnnotationCommandHandlerBeanPostProcessor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean;
+import org.axonframework.common.jpa.ContainerManagedEntityManagerProvider;
 import org.axonframework.contextsupport.spring.AnnotationDriven;
 import org.axonframework.eventhandling.*;
 import org.axonframework.eventhandling.amqp.spring.ListenerContainerLifecycleManager;
@@ -14,23 +15,29 @@ import org.axonframework.eventhandling.amqp.spring.SpringAMQPConsumerConfigurati
 import org.axonframework.eventhandling.amqp.spring.SpringAMQPTerminal;
 import org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor;
 import org.axonframework.eventsourcing.EventSourcingRepository;
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.mongo.DefaultMongoTemplate;
-import org.axonframework.eventstore.mongo.MongoEventStore;
-import org.axonframework.eventstore.mongo.MongoTemplate;
+import org.axonframework.eventstore.jpa.JpaEventStore;
 import org.axonframework.serializer.json.JacksonSerializer;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.transaction.RabbitTransactionManager;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * Created by ben on 23/02/16.
  */
 @Configuration
 @AnnotationDriven
+@EnableTransactionManagement
 public class AxonConfiguration {
 
     private static final String AMQP_CONFIG_KEY = "AMQP.Config";
@@ -40,6 +47,9 @@ public class AxonConfiguration {
 
     @Value("${spring.application.exchange}")
     private String exchangeName;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Bean
     JacksonSerializer axonJsonSerializer() {
@@ -54,7 +64,7 @@ public class AxonConfiguration {
     }
 
     @Bean
-    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration(RabbitTransactionManager transactionManager) {
+    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration(PlatformTransactionManager transactionManager) {
         SpringAMQPConsumerConfiguration cfg = new SpringAMQPConsumerConfiguration();
         cfg.setTransactionManager(transactionManager);
         cfg.setQueueName(queueName);
@@ -87,20 +97,43 @@ public class AxonConfiguration {
         return new ClusteringEventBus(new DefaultClusterSelector(simpleCluster), eventBusTerminal);
     }
 
-    @Bean(name = "axonMongoTemplate")
-    MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory) {
-        MongoTemplate template = new DefaultMongoTemplate(mongoDbFactory.getDb().getMongo());
-        return template;
+    @Bean
+    JpaEventStore jpaEventStore(JacksonSerializer jacksonSerializer){
+        ContainerManagedEntityManagerProvider containerManagedEntityManagerProvider = new ContainerManagedEntityManagerProvider();
+        containerManagedEntityManagerProvider.setEntityManager(entityManager);
+        JpaEventStore jpaEventStore = new JpaEventStore(containerManagedEntityManagerProvider, jacksonSerializer);
+        return jpaEventStore;
     }
 
     @Bean
-    EventStore eventStore(JacksonSerializer jacksonSerializer, MongoTemplate mongoTemplate) {
-        MongoEventStore eventStore = new MongoEventStore(jacksonSerializer, mongoTemplate);
-        return eventStore;
+    Queue defaultStream() {
+        return new Queue(queueName, true);
     }
 
     @Bean
-    EventSourcingRepository<ProductAggregate> productEventSourcingRepository(EventStore eventStore, EventBus eventBus) {
+    FanoutExchange eventBusExchange() {
+        return new FanoutExchange(exchangeName, true, false);
+    }
+
+    @Bean
+    Binding binding() {
+        return new Binding(queueName, Binding.DestinationType.QUEUE, exchangeName, "*.*", null);
+    }
+
+
+    @Bean
+    @Required
+    RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory, FanoutExchange fanoutExchange, Queue eventStream, Binding binding) {
+        RabbitAdmin admin = new RabbitAdmin(connectionFactory);
+        admin.setAutoStartup(true);
+        admin.declareExchange(fanoutExchange);
+        admin.declareQueue(eventStream);
+        admin.declareBinding(binding);
+        return admin;
+    }
+
+    @Bean
+    EventSourcingRepository<ProductAggregate> productEventSourcingRepository(JpaEventStore eventStore, EventBus eventBus) {
         EventSourcingRepository<ProductAggregate> repo = new EventSourcingRepository<ProductAggregate>(ProductAggregate.class, eventStore);
         repo.setEventBus(eventBus);
         return repo;
@@ -156,5 +189,4 @@ public class AxonConfiguration {
                 commandBus);
         return handler;
     }
-
 }

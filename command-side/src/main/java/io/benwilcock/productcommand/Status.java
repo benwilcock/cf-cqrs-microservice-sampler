@@ -4,7 +4,6 @@ import org.springframework.amqp.AmqpConnectException;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
@@ -26,8 +25,8 @@ public class Status {
 
     @Autowired
     DataSource dataSource;
-    @Autowired
-    MongoDbFactory mongoDbFactory;
+//    @Autowired
+//    MongoDbFactory mongoDbFactory;
     @Autowired
     ConnectionFactory rabbitConnectionFactory;
 
@@ -45,18 +44,19 @@ public class Status {
 
     public String getMongo() {
         StringBuilder sb = new StringBuilder();
+        sb.append("NOT REQUIRED");
 
-        if (mongoDbFactory == null) {
-            sb.append("NULL");
-        } else {
-            try {
-                sb.append(mongoDbFactory.getDb().getMongo().getAddress());
-                sb.append(":UP");
-            } catch (Exception ex) {
-                sb.append(":DOWN - ");
-                sb.append(ex.getCause().getMessage());
-            }
-        }
+//        if (mongoDbFactory == null) {
+//            sb.append("NULL");
+//        } else {
+//            try {
+//                sb.append(mongoDbFactory.getDb().getMongo().getAddress());
+//                sb.append(":UP");
+//            } catch (Exception ex) {
+//                sb.append(":DOWN - ");
+//                sb.append(ex.getCause().getMessage());
+//            }
+//        }
         return sb.toString();
     }
 
@@ -116,7 +116,7 @@ public class Status {
     }
 
     public boolean isMongo() {
-        return !(null == mongoDbFactory);
+        return false;
     }
 
     @Override

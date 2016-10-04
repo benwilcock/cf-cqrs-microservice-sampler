@@ -44,17 +44,18 @@ dependencies {
 
     // Axon CQRS
     compile("org.axonframework:axon-amqp:${axonVersion}")
-    compile("org.axonframework:axon-mongo:${axonVersion}")
+    // compile("org.axonframework:axon-mongo:${axonVersion}")
 
     // String Boot
     compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-    compile("org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}")
+    // compile("org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-amqp:${springBootVersion}")
 
-    //Unsure what needs these TBH...
+    // JPA Persistence
     compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
-    compile("com.h2database:h2")
+    compile("mysql:mysql-connector-java")
+    // compile("org.springframework.boot:spring-boot-starter-jta-atomikos")
 
     // Spring Cloud Connectors
     compile "org.springframework.cloud:spring-cloud-spring-service-connector:${springCloudConnectorsVersion}"
@@ -72,7 +73,7 @@ def JvmSettings = [
         "-Dspring.cloud.appId=product-command-side",
         "-Dspring.profiles.active=cloud",
         "-Dspring.cloud.rabbitmq=amqp://user:pass@localhost:5672/testvhost",
-        "-Dspring.cloud.mongodb=mongodb://localhost:27017/testdb",
+        "-Dspring.cloud.database=mysql://user:pass@localhost:3306/testdb",
         "-DINSTANCE_GUID=6AE34479-A77E-4BBC-8E29-16D57AEBB01D",
         "-DINSTANCE_INDEX=0"
 ]

@@ -2,7 +2,7 @@ version: '2'
 services:
   mysql:
     image: mysql:5.7
-    container_name: mysqldb
+    container_name: mysql
     ports:
      - "3306:3306"
     environment:
@@ -12,7 +12,7 @@ services:
      - MYSQL_DATABASE=testdb
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
+    container_name: rabbit
     ports:
      - "5672:5672"
      - "15672:15672"
@@ -20,8 +20,15 @@ services:
      - RABBITMQ_DEFAULT_USER=user
      - RABBITMQ_DEFAULT_PASS=pass
      - RABBITMQ_DEFAULT_VHOST=testvhost
-  mongodb:
-    image: mongo:2.4
-    container_name: mongodb
-    ports:
-     - "27017:27017"
+#  mongodb:
+#    image: mongo:2.4
+#    container_name: mongo
+#    ports:
+#     - "27017:27017"
+#  config:
+#    image: benwilcock/config-service
+#    container_name: config
+#    ports:
+#     - "8888:8888"
+#    environment:
+#     - SPRING_PROFILES_ACTIVE=production
