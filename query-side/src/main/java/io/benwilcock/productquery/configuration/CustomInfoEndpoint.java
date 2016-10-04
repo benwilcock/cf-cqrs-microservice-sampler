@@ -1,6 +1,6 @@
 package io.benwilcock.config;
 
-import io.benwilcock.Status;
+import io.benwilcock.productquery.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;

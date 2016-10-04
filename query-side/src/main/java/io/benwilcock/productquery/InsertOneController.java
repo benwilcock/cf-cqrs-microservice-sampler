@@ -1,4 +1,4 @@
-package io.benwilcock;
+package io.benwilcock.productquery;
 
 import io.benwilcock.productquery.domain.Product;
 import io.benwilcock.productquery.repository.ProductRepository;

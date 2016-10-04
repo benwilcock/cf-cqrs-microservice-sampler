@@ -22,17 +22,11 @@ class AxonConfiguration {
 
     private static final String AMQP_CONFIG_KEY = "AMQP.Config";
 
-    @Autowired
-    public ConnectionFactory connectionFactory;
-
-    @Autowired
-    public PlatformTransactionManager transactionManager;
-
-    @Autowired
-    public String uniqueQueueName;
+    @Value("${spring.application.queue}")
+    String queueName;
 
     @Value("${spring.application.terminal}")
-    private String terminalName;
+    String terminalName;
 
 
     @Bean
@@ -41,44 +35,44 @@ class AxonConfiguration {
     }
 
     @Bean
-    ListenerContainerLifecycleManager listenerContainerLifecycleManager() {
+    ListenerContainerLifecycleManager listenerContainerLifecycleManager(ConnectionFactory connectionFactory) {
         ListenerContainerLifecycleManager listenerContainerLifecycleManager = new ListenerContainerLifecycleManager();
         listenerContainerLifecycleManager.setConnectionFactory(connectionFactory);
         return listenerContainerLifecycleManager;
     }
 
     @Bean
-    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration() {
+    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration(PlatformTransactionManager transactionManager) {
         SpringAMQPConsumerConfiguration amqpConsumerConfiguration = new SpringAMQPConsumerConfiguration();
         amqpConsumerConfiguration.setTxSize(10);
         amqpConsumerConfiguration.setTransactionManager(transactionManager);
-        amqpConsumerConfiguration.setQueueName(uniqueQueueName);
+        amqpConsumerConfiguration.setQueueName(queueName);
         return amqpConsumerConfiguration;
     }
 
 
     @Bean
     SimpleCluster simpleCluster(SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration) {
-        SimpleCluster simpleCluster = new SimpleCluster(uniqueQueueName);
+        SimpleCluster simpleCluster = new SimpleCluster(queueName);
         simpleCluster.getMetaData().setProperty(AMQP_CONFIG_KEY, springAMQPConsumerConfiguration);
         return simpleCluster;
     }
 
     @Bean
-    EventBusTerminal terminal() {
+    EventBusTerminal terminal(ConnectionFactory connectionFactory, JacksonSerializer jacksonSerializer, ListenerContainerLifecycleManager listenerContainerLifecycleManager) {
         SpringAMQPTerminal terminal = new SpringAMQPTerminal();
         terminal.setConnectionFactory(connectionFactory);
-        terminal.setSerializer(axonJsonSerializer());
+        terminal.setSerializer(jacksonSerializer);
         terminal.setExchangeName(terminalName);
-        terminal.setListenerContainerLifecycleManager(listenerContainerLifecycleManager());
+        terminal.setListenerContainerLifecycleManager(listenerContainerLifecycleManager);
         terminal.setDurable(true);
         terminal.setTransactional(true);
         return terminal;
     }
 
     @Bean
-    EventBus eventBus(SimpleCluster simpleCluster) {
-        return new ClusteringEventBus(new DefaultClusterSelector(simpleCluster), terminal());
+    EventBus eventBus(SimpleCluster simpleCluster, EventBusTerminal terminal) {
+        return new ClusteringEventBus(new DefaultClusterSelector(simpleCluster), terminal);
     }
 
 }

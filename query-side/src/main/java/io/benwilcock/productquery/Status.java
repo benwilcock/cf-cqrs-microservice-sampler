@@ -1,4 +1,4 @@
-package io.benwilcock;
+package io.benwilcock.productquery;
 
 import org.springframework.amqp.AmqpConnectException;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

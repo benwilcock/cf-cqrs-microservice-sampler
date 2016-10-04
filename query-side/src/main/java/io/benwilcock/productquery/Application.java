@@ -1,4 +1,4 @@
-package io.benwilcock;
+package io.benwilcock.productquery;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

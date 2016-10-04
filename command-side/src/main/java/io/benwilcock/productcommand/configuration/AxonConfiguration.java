@@ -21,7 +21,6 @@ import org.axonframework.eventstore.mongo.MongoTemplate;
 import org.axonframework.serializer.json.JacksonSerializer;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.transaction.RabbitTransactionManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,12 +35,6 @@ public class AxonConfiguration {
 
     private static final String AMQP_CONFIG_KEY = "AMQP.Config";
 
-    @Autowired
-    public ConnectionFactory connectionFactory;
-
-    @Autowired
-    public RabbitTransactionManager transactionManager;
-
     @Value("${spring.application.queue}")
     private String queueName;
 
@@ -54,14 +47,14 @@ public class AxonConfiguration {
     }
 
     @Bean
-    ListenerContainerLifecycleManager listenerContainerLifecycleManager() {
+    ListenerContainerLifecycleManager listenerContainerLifecycleManager(ConnectionFactory connectionFactory) {
         ListenerContainerLifecycleManager mgr = new ListenerContainerLifecycleManager();
         mgr.setConnectionFactory(connectionFactory);
         return mgr;
     }
 
     @Bean
-    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration() {
+    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration(RabbitTransactionManager transactionManager) {
         SpringAMQPConsumerConfiguration cfg = new SpringAMQPConsumerConfiguration();
         cfg.setTransactionManager(transactionManager);
         cfg.setQueueName(queueName);
@@ -71,46 +64,45 @@ public class AxonConfiguration {
 
 
     @Bean
-    SimpleCluster simpleCluster() {
+    SimpleCluster simpleCluster(SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration) {
         SimpleCluster cluster = new SimpleCluster(queueName);
-        cluster.getMetaData().setProperty(AMQP_CONFIG_KEY, springAMQPConsumerConfiguration());
+        cluster.getMetaData().setProperty(AMQP_CONFIG_KEY, springAMQPConsumerConfiguration);
         return cluster;
     }
 
     @Bean
-    EventBusTerminal terminal() {
+    EventBusTerminal terminal(ConnectionFactory connectionFactory, JacksonSerializer jacksonSerializer, ListenerContainerLifecycleManager listenerContainerLifecycleManager) {
         SpringAMQPTerminal terminal = new SpringAMQPTerminal();
         terminal.setConnectionFactory(connectionFactory);
         terminal.setExchangeName(exchangeName);
         terminal.setDurable(true);
         terminal.setTransactional(true);
-        terminal.setSerializer(axonJsonSerializer());
-        //terminal.setSerializer(xmlSerializer());
-        terminal.setListenerContainerLifecycleManager(listenerContainerLifecycleManager());
+        terminal.setSerializer(jacksonSerializer);
+        terminal.setListenerContainerLifecycleManager(listenerContainerLifecycleManager);
         return terminal;
     }
 
     @Bean
-    EventBus eventBus() {
-        return new ClusteringEventBus(new DefaultClusterSelector(simpleCluster()), terminal());
+    EventBus eventBus(SimpleCluster simpleCluster, EventBusTerminal eventBusTerminal) {
+        return new ClusteringEventBus(new DefaultClusterSelector(simpleCluster), eventBusTerminal);
     }
 
     @Bean(name = "axonMongoTemplate")
-    MongoTemplate axonMongoTemplate(MongoDbFactory mongoDbFactory) {
+    MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory) {
         MongoTemplate template = new DefaultMongoTemplate(mongoDbFactory.getDb().getMongo());
         return template;
     }
 
     @Bean
-    EventStore eventStore(MongoTemplate mongoTemplate) {
-        MongoEventStore eventStore = new MongoEventStore(axonJsonSerializer(), mongoTemplate);
+    EventStore eventStore(JacksonSerializer jacksonSerializer, MongoTemplate mongoTemplate) {
+        MongoEventStore eventStore = new MongoEventStore(jacksonSerializer, mongoTemplate);
         return eventStore;
     }
 
     @Bean
-    EventSourcingRepository<ProductAggregate> productEventSourcingRepository(EventStore eventStore) {
+    EventSourcingRepository<ProductAggregate> productEventSourcingRepository(EventStore eventStore, EventBus eventBus) {
         EventSourcingRepository<ProductAggregate> repo = new EventSourcingRepository<ProductAggregate>(ProductAggregate.class, eventStore);
-        repo.setEventBus(eventBus());
+        repo.setEventBus(eventBus);
         return repo;
     }
 
@@ -121,9 +113,9 @@ public class AxonConfiguration {
     }
 
     @Bean
-    CommandGatewayFactoryBean<CommandGateway> commandGatewayFactoryBean() {
+    CommandGatewayFactoryBean<CommandGateway> commandGatewayFactoryBean(CommandBus commandBus) {
         CommandGatewayFactoryBean<CommandGateway> factory = new CommandGatewayFactoryBean<CommandGateway>();
-        factory.setCommandBus(commandBus());
+        factory.setCommandBus(commandBus);
         return factory;
     }
 
@@ -133,9 +125,9 @@ public class AxonConfiguration {
      * @return
      */
     @Bean
-    AnnotationEventListenerBeanPostProcessor eventListenerBeanPostProcessor() {
+    AnnotationEventListenerBeanPostProcessor eventListenerBeanPostProcessor(EventBus eventBus) {
         AnnotationEventListenerBeanPostProcessor proc = new AnnotationEventListenerBeanPostProcessor();
-        proc.setEventBus(eventBus());
+        proc.setEventBus(eventBus);
         return proc;
     }
 
@@ -145,9 +137,9 @@ public class AxonConfiguration {
      * @return
      */
     @Bean
-    AnnotationCommandHandlerBeanPostProcessor commandHandlerBeanPostProcessor() {
+    AnnotationCommandHandlerBeanPostProcessor commandHandlerBeanPostProcessor(CommandBus commandBus) {
         AnnotationCommandHandlerBeanPostProcessor proc = new AnnotationCommandHandlerBeanPostProcessor();
-        proc.setCommandBus(commandBus());
+        proc.setCommandBus(commandBus);
         return proc;
     }
 
@@ -157,11 +149,11 @@ public class AxonConfiguration {
      * @return
      */
     @Bean
-    AggregateAnnotationCommandHandler<ProductAggregate> productAggregateCommandHandler(EventSourcingRepository<ProductAggregate> eventSourcingRepository) {
+    AggregateAnnotationCommandHandler<ProductAggregate> productAggregateCommandHandler(EventSourcingRepository<ProductAggregate> eventSourcingRepository, CommandBus commandBus) {
         AggregateAnnotationCommandHandler<ProductAggregate> handler = new AggregateAnnotationCommandHandler<ProductAggregate>(
                 ProductAggregate.class,
                 eventSourcingRepository,
-                commandBus());
+                commandBus);
         return handler;
     }
 

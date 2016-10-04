@@ -19,20 +19,14 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitConfiguration {
 
     @Value("${spring.application.exchange}")
-    private String exchangeName;
+    String exchangeName;
 
     @Value("${spring.application.queue}")
-    private String queueName;
+    String queueName;
 
     @Bean
-    public String uniqueQueueName() {
-        //return queueName + "." + index;
-        return queueName;
-    }
-
-    @Bean
-    Queue eventStream(String uniqueQueueName) {
-        return new Queue(uniqueQueueName, false, false, true);
+    Queue eventStream() {
+        return new Queue(queueName, false, false, true);
     }
 
     @Bean
@@ -41,18 +35,18 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    Binding binding(String uniqueQueueName) {
-        return new Binding(uniqueQueueName, Binding.DestinationType.QUEUE, exchangeName, "*.*", null);
+    Binding binding() {
+        return new Binding(queueName, Binding.DestinationType.QUEUE, exchangeName, "*.*", null);
     }
 
     @Bean
     @Required
-    RabbitAdmin rabbitAdmin(String uniqueQueueName, ConnectionFactory connectionFactory) {
+    RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory, FanoutExchange fanoutExchange, Queue eventStream, Binding binding) {
         RabbitAdmin admin = new RabbitAdmin(connectionFactory);
         admin.setAutoStartup(true);
-        admin.declareExchange(eventBusExchange());
-        admin.declareQueue(eventStream(uniqueQueueName));
-        admin.declareBinding(binding(uniqueQueueName));
+        admin.declareExchange(fanoutExchange);
+        admin.declareQueue(eventStream);
+        admin.declareBinding(binding);
         return admin;
     }
 }

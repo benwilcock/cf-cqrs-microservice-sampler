@@ -1,6 +1,7 @@
 buildscript {
     ext {
         springBootVersion = '1.3.5.RELEASE'
+        axonVersion = '2.4.5'
         springCloudConnectorsVersion = '1.2.3.RELEASE'
         springGradleDependencyManagement = '0.6.0.RELEASE'
     }
@@ -41,7 +42,7 @@ dependencies {
     compile project(':common-things')
 
     // Axon CQRS
-    compile("org.axonframework:axon-amqp:2.4.3")
+    compile("org.axonframework:axon-amqp:${axonVersion}")
 
     // JPA Persistence
     runtime "mysql:mysql-connector-java"

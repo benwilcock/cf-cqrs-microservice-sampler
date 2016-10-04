@@ -42,12 +42,12 @@ public class RabbitConfiguration {
 
     @Bean
     @Required
-    RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+    RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory, FanoutExchange fanoutExchange, Queue eventStream, Binding binding) {
         RabbitAdmin admin = new RabbitAdmin(connectionFactory);
         admin.setAutoStartup(true);
-        admin.declareExchange(eventBusExchange());
-        admin.declareQueue(defaultStream());
-        admin.declareBinding(binding());
+        admin.declareExchange(fanoutExchange);
+        admin.declareQueue(eventStream);
+        admin.declareBinding(binding);
         return admin;
     }
 

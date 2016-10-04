@@ -1,4 +1,4 @@
-package io.benwilcock;
+package io.benwilcock.productquery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
