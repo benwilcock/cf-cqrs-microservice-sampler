@@ -51,7 +51,7 @@ public class AxonConfiguration {
     @Value("${spring.application.exchange}")
     private String exchangeName;
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "default")
     EntityManager entityManager;
 
     @Bean
@@ -67,11 +67,12 @@ public class AxonConfiguration {
     }
 
     @Bean
-    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration(PlatformTransactionManager transactionManager) {
+    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration() {
+        //removed PlatformTransactionManager transactionManager from signature.
         SpringAMQPConsumerConfiguration cfg = new SpringAMQPConsumerConfiguration();
-        cfg.setTransactionManager(transactionManager);
+        // cfg.setTransactionManager(transactionManager);
         cfg.setQueueName(queueName);
-        cfg.setTxSize(10);
+        // cfg.setTxSize(10);
         return cfg;
     }
 
@@ -89,7 +90,7 @@ public class AxonConfiguration {
         terminal.setConnectionFactory(connectionFactory);
         terminal.setExchangeName(exchangeName);
         terminal.setDurable(true);
-        terminal.setTransactional(true);
+        // terminal.setTransactional(true);
         terminal.setSerializer(jacksonSerializer);
         terminal.setListenerContainerLifecycleManager(listenerContainerLifecycleManager);
         return terminal;
@@ -101,13 +102,18 @@ public class AxonConfiguration {
     }
 
     @Bean
-    JpaEventStore jpaEventStore(JacksonSerializer jacksonSerializer){
+    ContainerManagedEntityManagerProvider containerManagedEntityManagerProvider(){
         ContainerManagedEntityManagerProvider containerManagedEntityManagerProvider = new ContainerManagedEntityManagerProvider();
         containerManagedEntityManagerProvider.setEntityManager(entityManager);
+        return containerManagedEntityManagerProvider;
+    }
+
+    @Bean
+    JpaEventStore jpaEventStore(JacksonSerializer jacksonSerializer, ContainerManagedEntityManagerProvider containerManagedEntityManagerProvider){
         JpaEventStore jpaEventStore = new JpaEventStore(containerManagedEntityManagerProvider, jacksonSerializer);
         return jpaEventStore;
     }
-
+    
     @Bean
     Queue defaultStream() {
         return new Queue(queueName, true);
