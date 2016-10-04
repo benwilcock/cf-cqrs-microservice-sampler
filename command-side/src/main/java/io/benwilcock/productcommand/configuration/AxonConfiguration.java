@@ -17,20 +17,28 @@ import org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPos
 import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.eventstore.jpa.JpaEventStore;
 import org.axonframework.serializer.json.JacksonSerializer;
+import org.axonframework.unitofwork.SpringTransactionManager;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.orm.jpa.EntityScan;
+import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
 
 /**
  * Created by ben on 23/02/16.
@@ -38,6 +46,7 @@ import javax.persistence.PersistenceContext;
 @Configuration
 @AnnotationDriven
 @EnableTransactionManagement
+@EntityScan(basePackages = "org.axonframework.eventstore.jpa")
 public class AxonConfiguration {
 
     private static final String AMQP_CONFIG_KEY = "AMQP.Config";
@@ -140,8 +149,9 @@ public class AxonConfiguration {
     }
 
     @Bean
-    CommandBus commandBus() {
+    CommandBus commandBus(PlatformTransactionManager transactionManager) {
         SimpleCommandBus commandBus = new SimpleCommandBus();
+        commandBus.setTransactionManager(new SpringTransactionManager(transactionManager));
         return commandBus;
     }
 
