@@ -70,6 +70,7 @@ dependencies {
 }
 
 def JvmSettings = [
+        "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005",
         "-Dspring.cloud.appId=product-command-side",
         "-Dspring.profiles.active=cloud",
         "-Dspring.cloud.rabbitmq=amqp://user:pass@localhost:5672/testvhost",
@@ -81,6 +82,7 @@ def JvmSettings = [
 test {
     jvmArgs = JvmSettings
 }
+
 
 bootRun {
     jvmArgs = JvmSettings

@@ -6,12 +6,12 @@ package io.benwilcock.utils;
 public class Statics {
 
     public static final String PROTOCOL = "http://";
-    public static final String CMD_PORT = ":9001";
-    public static final String QRY_PORT = ":9002";
+    public static final String CMD_PORT = ":80";
+    public static final String QRY_PORT = ":80";
 
-    public static final String DOMAIN = "localhost";
-    public static final String COMMAND_APP_NAME = "";
-    public static final String QUERY_APP_NAME = "";
+    public static final String DOMAIN = ".local.pcfdev.io";
+    public static final String COMMAND_APP_NAME = "command";
+    public static final String QUERY_APP_NAME = "query";
 
     public static final String COMMAND_APP_ROUTE = PROTOCOL + COMMAND_APP_NAME + DOMAIN + CMD_PORT;
     public static final String QUERY_APP_ROUTE = PROTOCOL + QUERY_APP_NAME + DOMAIN + QRY_PORT;
