@@ -5,13 +5,13 @@ import io.benwilcock.utils.Asserts;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.repository.ConcurrencyException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
@@ -50,8 +50,11 @@ public class ProductRestController {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
             if (null != cex.getCause()) {
-                LOG.warn("Caused by: {} {}", cex.getCause().getClass().getName(), cex.getCause().getMessage());
-                if (cex.getCause() instanceof ConcurrencyException) {
+                Throwable cexCause = cex.getCause();
+                LOG.warn("Caused by: {} {}", cexCause.getClass().getName(), cexCause.getMessage(), cexCause);
+                if (cexCause instanceof ConcurrencyException
+                        || cexCause instanceof ConstraintViolationException
+                        || cexCause instanceof PersistenceException) {
                     LOG.warn("A duplicate product with the same ID [{}] already exists.", id);
                     response.setStatus(HttpServletResponse.SC_CONFLICT);
                 }

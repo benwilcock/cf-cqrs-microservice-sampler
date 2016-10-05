@@ -67,12 +67,11 @@ public class AxonConfiguration {
     }
 
     @Bean
-    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration() {
-        //removed PlatformTransactionManager transactionManager from signature.
+    SpringAMQPConsumerConfiguration springAMQPConsumerConfiguration(PlatformTransactionManager transactionManager) {
         SpringAMQPConsumerConfiguration cfg = new SpringAMQPConsumerConfiguration();
-        // cfg.setTransactionManager(transactionManager);
+        cfg.setTransactionManager(transactionManager);
         cfg.setQueueName(queueName);
-        // cfg.setTxSize(10);
+        cfg.setTxSize(10);
         return cfg;
     }
 
@@ -90,7 +89,7 @@ public class AxonConfiguration {
         terminal.setConnectionFactory(connectionFactory);
         terminal.setExchangeName(exchangeName);
         terminal.setDurable(true);
-        // terminal.setTransactional(true);
+        terminal.setTransactional(true);
         terminal.setSerializer(jacksonSerializer);
         terminal.setListenerContainerLifecycleManager(listenerContainerLifecycleManager);
         return terminal;
