@@ -32,13 +32,15 @@ I'm in the process of porting the original code from here: https://github.com/be
  
 # Setup
 
- - Start PCF-Dev with Spring Cloud Services
- - Login
- - Create `mysql` service
- - create `rabbit` service
- - Create `config` service (using JSON config)
- - Push the project using the manifest (command and query apps)
- - Integration Test
+ - Checkout the code (`git clone`)
+ - Build the project (`./gradlew clean test assemble`)
+ - Start PCF-Dev with Spring Cloud Services (`cf dev start -s all`)
+ - Login (`cf dev target`)
+ - Create `mysql` service (`cf create-service`)
+ - create `rabbit` service (`cf create-service`)
+ - Create `config` service (`cf create-service` using JSON config)
+ - Push the project using the manifest (`cf push`)
+ - Integration Test (`./gradlew integration-test:integrationTest`)
 
 
 # About the Author
