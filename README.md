@@ -10,8 +10,6 @@ It combines together all of the following elements in order to produce one logic
  - Event Sourcing & Materialised Views (with RabbitMQ, MongoDB and MySQL)
  - Java Microservices with [Spring Boot](http://projects.spring.io/spring-boot/)
  - External configuration on Cloud Foundry using [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/)
-
-
  
  I'm testing the port with [PCF-Dev](https://pivotal.io/pcf-dev), the free "_cloud-foundry-on-your-desktop_" tool from Pivotal. This tool comes with Rabbit and MySQL built-in, but will require you to add a local MongoDB backing-service using the `cf cups` command.
 
@@ -19,12 +17,29 @@ It combines together all of the following elements in order to produce one logic
 
 I'm in the process of porting the original code from here: https://github.com/benwilcock/microservice-sampler
 
- - Query Side: Working?
- - Command Side: **Broken!**
- - Integration Test: Broken
+ - Query Side: Working
+ - Command Side: Working
+ - Integration Test: Working
  - Spring Cloud Config: Working
  - Spring Cloud Registry: Not Started
  - Spring Cloud Circuit Breaker: Not Started
+ 
+# Requirements
+
+ - Mac, Linux, Windows PC with 16GB RAM
+ - CF CLI
+ - [PCF-Dev](https://pivotal.io/pcf-dev) Started with Spring Cloud Services
+ 
+# Setup
+
+ - Start PCF-Dev with Spring Cloud Services
+ - Login
+ - Create `mysql` service
+ - create `rabbit` service
+ - Create `config` service (using JSON config)
+ - Push the project using the manifest (command and query apps)
+ - Integration Test
+
 
 # About the Author
 
