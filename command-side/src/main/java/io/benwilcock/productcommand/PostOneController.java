@@ -27,8 +27,9 @@ public class PostOneController {
     @RequestMapping("/postone")
     void injectCreateEvent() {
         String guid = UUID.randomUUID().toString();
-        AddProductCommand command = new AddProductCommand(guid, "Dummy Event " + guid);
+        logger.info("Creating test AddProductCommand: {}", guid);
+        AddProductCommand command = new AddProductCommand(guid, "Dummy Product " + guid);
         commandGateway.sendAndWait(command);
-        logger.info("Sent command: {}", command);
+        logger.info("Sent AddProductCommand: {}", command);
     }
 }

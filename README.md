@@ -22,7 +22,11 @@ If you'd like more general information on CQRS/ES Microservice architecture chec
  
 ## Getting Started
 
-**To follow this tutorial you'll need a Mac, Linux or Windows PC with 16GB RAM, Java JDK 1.8 and Git.**
+**To follow this tutorial you'll need...**
+ 
+ - A Mac, Linux or Windows PC with 16GB RAM
+ - Java JDK 1.8
+ - About 15 - 45 minutes depending on your setup.
 
 ### Install the required software
 
@@ -43,6 +47,8 @@ $ git clone https://github.com/benwilcock/cf-cqrs-microservice-sampler.git
 $ cd cf-cqrs-microservice-sampler
 $ ./gradlew clean assemble
 ````
+
+> You don't actually need to have `git` installed if you don't want it, simply download a ZIP of the source-code instead and unzip it.
  
 > You **don't** need to install Gradle. The source code includes a `gradlew.sh` and a `gradlew.bat` file that you can use to run gradle commands. 
 
