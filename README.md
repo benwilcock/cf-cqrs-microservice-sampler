@@ -18,17 +18,21 @@ If you'd like more general information on CQRS/ES Microservice architecture chec
  
 # Getting Started
 
-> **To follow this tutorial you'll need a Mac, Linux or Windows PC with 16GB RAM and Java JDK 1.8.**
+**To follow this tutorial you'll need a Mac, Linux or Windows PC with 16GB RAM, Java JDK 1.8 and Git.**
 
- - Install the CF CLI command line tool (v6.22.1+) as instructed here: https://github.com/cloudfoundry/cli
+## Install the required software
+
+1. Install the CF CLI command line tool (currently v6.22.1+) as instructed here: https://github.com/cloudfoundry/cli
  
- - Install VirtualBox 5+ from here: https://www.virtualbox.org
+2. Install VirtualBox 5+ from here: https://www.virtualbox.org
  
- - Install the PCF-Dev (v0.20.0+) developer environment as instructed here: https://github.com/pivotal-cf/pcfdev
+3. Install the PCF-Dev (currently v0.20.0+) developer environment as instructed here: https://github.com/pivotal-cf/pcfdev
  
 > Once you've installed these tools, you're ready to create a local development environment that mimics Pivotal Cloud Foundry.
 
- - Checkout the source code for this project and build it: 
+## Prepare the local cloud environment
+
+1. Checkout the source code for this project and build it: 
  
 ````bash
 $ git clone https://github.com/benwilcock/cf-cqrs-microservice-sampler.git
@@ -37,47 +41,49 @@ $ ./gradlew clean test assemble
  
 > You **don't** need to install Gradle. The source code includes a `gradlew.sh` and a `gradlew.bat` file that you can use to run gradle commands. 
 
- - Start PCF-Dev with Spring Cloud Services:
+2. Start PCF-Dev with Spring Cloud Services:
  
- `cf dev start -s all`
+  `cf dev start -s all`
  
 > Starting PCF-Dev takes about 8 minutes depending on your PC. It emulates complex cloud infrastructure in a local VirtualBox environemnt.
  
- - Attach to PCF-Dev from the cf CLI: 
+3. Attach to PCF-Dev from the cf CLI: 
  
  `cf dev target`
  
 > You have now activated your PCF-Dev client and it's ready to push applications to your local cloud development environment.
  
- - Create a MySQL database backing-service called `mysql` in your local cloud:
+4. Create a MySQL database backing-service called `mysql` in your local cloud:
  
  `cf create-service p-mysql 512mb mysql`
  
- - Create a RabbitMQ messaging backing-service called `rabbit` in your local cloud:
+5. Create a RabbitMQ messaging backing-service called `rabbit` in your local cloud:
  
  `cf create-service p-rabbitmq standard rabbit`
  
- - Setup the Spring Cloud Config backing-service in your local cloud (use the script provided, takes a few minutes - use `cf services` to check progress):
+6. Setup the Spring Cloud Config backing-service in your local cloud (use the script provided, takes a few minutes - use `cf services` to check progress):
  
  `config-server-setup.sh`
  
- - Now **"Push"** the project to your local cloud:
+7. Now **"Push"** the project to your local cloud:
   
  `cf push`
 
 > The push uses the `manifest.yml` file. This file tells the cf CLI where to find the apps to deploy and which backing-services to "bind" the apps to.
 
- - Run the integration tests to check everything works: 
+## Test the app
+
+1. Run the integration tests to check everything works: 
  
  `./gradlew integration-test:integrationTest`
 
 > The tests should run and pass. Commands executed on the **command** side result in events being stored in the database and sent out via RabbitMQ. The **query** side is listening to RabbitMQ for these events, and then posts records into the Product materialised-view (it's own database).
 
- - Use the "add" command to add a Product:
+2. Use the "add" command to add a Product:
  
 `curl -X POST http://command.local.pcfdev.io:80/add/fb226b13-65f5-47bf-8a06-f97affaaf60f?name=MyTestProduct`
 
- - Query for the Product you just added:
+3. Query for the Product you just added:
 
 `curl -X GET http://query.local.pcfdev.io:80/products/fb226b13-65f5-47bf-8a06-f97affaaf60f`
 
