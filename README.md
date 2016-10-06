@@ -1,44 +1,37 @@
 # Building Scalable CQRS Microservices with Cloud Foundry
 
-This project demonstrates one way in which you can build CQRS/ES applications using Cloud Foundry and Spring Cloud Services, Spring Boot and the Axon Framework. 
+This project demonstrates how to build cloud native Command & Query Responsibility Separation and Event Sourcing applications using Pivotal Cloud Foundry, Spring Cloud Services, Spring Boot and the Axon Framework. 
 
-It combines together all of the following elements in order to produce one logical application - a **Product Data Service**.
+It combines together all of the following elements in order to produce one logical application - a **'Product Data Service'**.
 
- - Command & Query Responsibility Separation (CQRS) and Event Sourcing (ES) using the [Axon CQRS Framework](http://www.axonframework.org/)
- - Java Microservices with [Spring Boot](http://projects.spring.io/spring-boot/)
+ - CQRS and Event Sourcing using the [Axon CQRS Framework](http://www.axonframework.org/)
+ - [Spring Boot](http://projects.spring.io/spring-boot/) Microservices
  - Externalised 12-factor configuration using [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/)
  
-I'm using [PCF-Dev](https://pivotal.io/pcf-dev) for this project. PCF-Dev is a free open-source "_cloud-foundry-on-your-desktop_" tool from Pivotal. This tool comes with RabbitMQ, MySQL and Spring Cloud Services out-of-the-box. Apps tested against PCF-Dev will run against Pivotal Cloud Foundry wilthout modification if the same backing-services are present on your target environment.
+I'm using [PCF-Dev](https://pivotal.io/pcf-dev) for this project.
+ 
+> PCF-Dev is a free open-source _cloud-foundry-on-your-desktop_ from Pivotal. It's designed for cloud developers and comes with RabbitMQ, MySQL and Spring Cloud Services built-in. Apps tested against PCF-Dev will run against Pivotal Cloud Foundry without modification (assuming the same backing-services are present).
 
-# Status
+If you're not interested in the cloud (why?) then the original non-cloud project can be found here: https://github.com/benwilcock/microservice-sampler
+ 
+# Getting Started
 
-I'm in the process of porting the original code from here: https://github.com/benwilcock/microservice-sampler
+> **To follow this tutorial you'll need a Mac, Linux or Windows PC with 16GB RAM and Java JDK 1.8.**
 
- - Query Side: Working
- - Command Side: Working
- - Integration Test: Working
- - Cloud Based Config: Working
+ - Install the CF CLI command line tool (v6.22.1+) as instructed here: https://github.com/cloudfoundry/cli
  
-> Tested on PCF-Dev and PEZ environments. PCF-Dev expected.
+ - Install VirtualBox 5+ from here: https://www.virtualbox.org
  
+ - Install the PCF-Dev (v0.20.0+) developer environment as instructed here: https://github.com/pivotal-cf/pcfdev
  
-# Setup
+> Once you've installed these tools, you're ready to create a local development environment that mimics Pivotal Cloud Foundry.
 
-> **Requires Mac, Linux or Windows PC with 16GB RAM**
-
- - Install the CF CLI command line tool as instructed here: https://github.com/cloudfoundry/cli
- - Install VirtualBox 5+ from here: https://www.virtualbox.org/
- - Install the PCF-Dev developer environment as instructed here: https://github.com/pivotal-cf/pcfdev
+ - Checkout the source code for this project and build it: 
  
-> Once you've installed these, you'll have a local environment that mimics Pivotal Cloud Foundry.
-
- - Checkout the source code: 
- 
- `git clone https://github.com/benwilcock/cf-cqrs-microservice-sampler.git`
- 
- - Build the project (requires Java JDK 1.8): 
- 
- `./gradlew clean test assemble`
+````bash
+$ git clone https://github.com/benwilcock/cf-cqrs-microservice-sampler.git
+$ ./gradlew clean test assemble
+````
  
 > You **don't** need to install Gradle. The source code includes a `gradlew.sh` and a `gradlew.bat` file that you can use to run gradle commands. 
 
@@ -46,9 +39,9 @@ I'm in the process of porting the original code from here: https://github.com/be
  
  `cf dev start -s all`
  
-> Starting PCF-Dev takes a while - it emulates complex cloud infrastructure in a single VM.
+> Starting PCF-Dev takes about 8 minutes depending on your PC. It emulates complex cloud infrastructure in a local VirtualBox environemnt.
  
- - Login to PCF-Dev from the cf CLI: 
+ - Attach to PCF-Dev from the cf CLI: 
  
  `cf dev target`
  
