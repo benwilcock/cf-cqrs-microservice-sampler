@@ -1,6 +1,6 @@
 # Building Scalable CQRS Microservices with Cloud Foundry
 
-This project demonstrates how to build cloud native Command & Query Responsibility Separation and Event Sourcing applications using Pivotal Cloud Foundry. 
+This project demonstrates how to build cloud native Command & Query Responsibility Separation and Event Sourcing applications using Pivotal Cloud Foundry.
 
 It combines the following technical elements in order to produce one logical application - a **'Product Data Service'**.
 
@@ -13,6 +13,8 @@ I'm using [Pivotal PCF-Dev](https://pivotal.io/pcf-dev) for this demo.
 > **About PCF-Dev.** PCF-Dev is a free open-source _'cloud-foundry-on-your-desktop'_ application from Pivotal. It's designed for cloud developers, emulates Pivotal Cloud Foundry and comes with RabbitMQ, MySQL and Spring Cloud Services built-in. Apps tested against PCF-Dev will run against Pivotal Cloud Foundry without modification (assuming that the same backing-services required by your app are present).
 
 If you're not interested in the cloud (why not?) then the original non-PaaS version of this project can be found here: https://github.com/benwilcock/microservice-sampler
+
+If you'd like more general information on CQRS/ES Microservice architecture check out this [slideshare](http://www.slideshare.net/BenWilcock1/microservice-architecture-with-cqrs-and-event-sourcing).
  
 # Getting Started
 
