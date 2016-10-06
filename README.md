@@ -20,27 +20,68 @@ I'm in the process of porting the original code from here: https://github.com/be
  - Query Side: Working
  - Command Side: Working
  - Integration Test: Working
- - Spring Cloud Config: Working
- - Spring Cloud Registry: Not Started
- - Spring Cloud Circuit Breaker: Not Started
+ - Cloud Based Config: Working
+ - Service Registry: Not Started
+ - Service Circuit Breaker: Not Started
  
-# Requirements
-
- - Mac, Linux, Windows PC with 16GB RAM
- - CF CLI
- - [PCF-Dev](https://pivotal.io/pcf-dev) Started with Spring Cloud Services
+ > Tested on PCF-Dev and PEZ environments. PCF-Dev expected.
+ 
  
 # Setup
 
- - Checkout the code (`git clone`)
- - Build the project (`./gradlew clean test assemble`)
- - Start PCF-Dev with Spring Cloud Services (`cf dev start -s all`)
- - Login (`cf dev target`)
- - Create `mysql` service (`cf create-service`)
- - create `rabbit` service (`cf create-service`)
- - Create `config` service (`cf create-service` using JSON config)
- - Push the project using the manifest (`cf push`)
- - Integration Test (`./gradlew integration-test:integrationTest`)
+> **Requires Mac, Linux or Windows PC with 16GB RAM**
+
+ - Install the CF CLI command line tool as instructed here: https://github.com/cloudfoundry/cli
+ - Install VirtualBox 5+ from here: https://www.virtualbox.org/
+ - Install the PCF-Dev developer environment as instructed here: https://github.com/pivotal-cf/pcfdev
+ 
+> Once you've installed these, you'll have a local environment that mimics Pivotal Cloud Foundry.
+
+ - Checkout the source code: 
+ 
+ `git clone https://github.com/benwilcock/cf-cqrs-microservice-sampler.git`
+ 
+ - Build the project (requires Java JDK 1.8): 
+ 
+ `./gradlew clean test assemble`
+ 
+> You **don't** need to install Gradle. The source code includes a `gradlew.sh` and a `gradlew.bat` file that you can use to run gradle commands. 
+
+ - Start PCF-Dev with Spring Cloud Services:
+ 
+ `cf dev start -s all`
+ 
+ > Starting PCF-Dev takes a while - it emulates the internet :)
+ 
+ - Login to PCF-Dev from the cf CLI: 
+ 
+ `cf dev target`
+ 
+> You have now activated your PCF-Dev client and it's ready to push applications to your local cloud development environment.
+ 
+ - Create a MySQL database backing-service in your local cloud:
+ 
+ `cf create-service`
+ 
+ - Create a RabbitMQ messaging backing-service in your local cloud:
+ 
+ `cf create-service`
+ 
+ - Setup the Spring Cloud Config backing-service in your local cloud (using the script provided which takes a few minutes):
+ 
+ `config-server-setup.sh`
+ 
+ - Now **"Push"** the project to your local cloud:
+  
+ `cf push`
+
+> The `manifest.yml` file tells the CF CLI where to find the apps and which services to "bind" them to.
+
+ - Run the integration tests to check everything works: 
+ 
+ `./gradlew integration-test:integrationTest`
+
+> The tests should run and pass. Commands executed on the **command** side result in events being stored in the database and sent out via RabbitMQ. The **query** side is listening to RabbitMQ for these events, and then posts records into the Product materialised-view (it's own database).
 
 
 # About the Author

@@ -1,5 +1,4 @@
 ---
-buildpack: java_buildpack
 services:
   - config
   - rabbit

@@ -10,6 +10,7 @@ public class Statics {
     public static final String QRY_PORT = ":80";
 
     public static final String DOMAIN = ".local.pcfdev.io";
+    //public static final String DOMAIN = ".cfapps.pez.pivotal.io";
     public static final String COMMAND_APP_NAME = "command";
     public static final String QUERY_APP_NAME = "query";
 

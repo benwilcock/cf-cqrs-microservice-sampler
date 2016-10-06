@@ -39,13 +39,12 @@ jar {
 }
 
 dependencies {
+
+    // Shared Event definitions
     compile project(':common-things')
 
     // Axon CQRS
     compile("org.axonframework:axon-amqp:${axonVersion}")
-
-    // JPA Persistence
-    runtime "mysql:mysql-connector-java"
 
     // String Boot
     compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
@@ -54,6 +53,12 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-amqp:${springBootVersion}")
     testCompile("org.springframework.boot:spring-boot-starter-test")
+
+
+    // JPA Persistence
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
+    runtime("mysql:mysql-connector-java")
 
     // Spring Cloud Connectors
     compile "org.springframework.cloud:spring-cloud-spring-service-connector:${springCloudConnectorsVersion}"
@@ -65,6 +70,7 @@ dependencies {
 }
 
 def JvmSettings = [
+        // "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005",
         "-Dspring.cloud.appId=product-query-side",
         "-Dspring.profiles.active=cloud",
         "-Dspring.cloud.database=mysql://user:pass@localhost:3306/testdb",
