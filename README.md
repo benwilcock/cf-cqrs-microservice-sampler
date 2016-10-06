@@ -50,7 +50,7 @@ I'm in the process of porting the original code from here: https://github.com/be
  
  `cf dev start -s all`
  
-> Starting PCF-Dev takes a while - it emulates the internet :)
+> Starting PCF-Dev takes a while - it emulates complex cloud infrastructure in a single VM.
  
  - Login to PCF-Dev from the cf CLI: 
  
