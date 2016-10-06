@@ -24,7 +24,7 @@ I'm in the process of porting the original code from here: https://github.com/be
  - Service Registry: Not Started
  - Service Circuit Breaker: Not Started
  
- > Tested on PCF-Dev and PEZ environments. PCF-Dev expected.
+> Tested on PCF-Dev and PEZ environments. PCF-Dev expected.
  
  
 # Setup
@@ -51,7 +51,7 @@ I'm in the process of porting the original code from here: https://github.com/be
  
  `cf dev start -s all`
  
- > Starting PCF-Dev takes a while - it emulates the internet :)
+> Starting PCF-Dev takes a while - it emulates the internet :)
  
  - Login to PCF-Dev from the cf CLI: 
  
@@ -59,15 +59,15 @@ I'm in the process of porting the original code from here: https://github.com/be
  
 > You have now activated your PCF-Dev client and it's ready to push applications to your local cloud development environment.
  
- - Create a MySQL database backing-service in your local cloud:
+ - Create a MySQL database backing-service called `mysql` in your local cloud:
  
- `cf create-service`
+ `cf create-service p-mysql 512mb mysql`
  
- - Create a RabbitMQ messaging backing-service in your local cloud:
+ - Create a RabbitMQ messaging backing-service called `rabbit` in your local cloud:
  
- `cf create-service`
+ `cf create-service p-rabbitmq standard rabbit`
  
- - Setup the Spring Cloud Config backing-service in your local cloud (using the script provided which takes a few minutes):
+ - Setup the Spring Cloud Config backing-service in your local cloud (use the script provided, takes a few minutes - use `cf services` to check progress):
  
  `config-server-setup.sh`
  
@@ -75,7 +75,7 @@ I'm in the process of porting the original code from here: https://github.com/be
   
  `cf push`
 
-> The `manifest.yml` file tells the CF CLI where to find the apps and which services to "bind" them to.
+> The push uses the `manifest.yml` file. This file tells the cf CLI where to find the apps to deploy and which backing-services to "bind" the apps to.
 
  - Run the integration tests to check everything works: 
  
