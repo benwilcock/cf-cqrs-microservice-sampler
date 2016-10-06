@@ -6,12 +6,11 @@ This is a non-trivial suite of CQRS microservices that demonstrates how to build
 
 It combines together all of the following elements in order to produce one logical application - a **Product Data Service**.
 
- - Command & Query Responsibility Separation (CQRS) using the [Axon CQRS Framework](http://www.axonframework.org/)
- - Event Sourcing & Materialised Views (with RabbitMQ, MongoDB and MySQL)
+ - Command & Query Responsibility Separation (CQRS) and Event Sourcing (ES) using the [Axon CQRS Framework](http://www.axonframework.org/)
  - Java Microservices with [Spring Boot](http://projects.spring.io/spring-boot/)
- - External configuration on Cloud Foundry using [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/)
+ - Externalised 12-factor configuration using [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/)
  
- I'm testing the port with [PCF-Dev](https://pivotal.io/pcf-dev), the free "_cloud-foundry-on-your-desktop_" tool from Pivotal. This tool comes with Rabbit and MySQL built-in, but will require you to add a local MongoDB backing-service using the `cf cups` command.
+I'm using [PCF-Dev](https://pivotal.io/pcf-dev) for this project. PCF-Dev is a free open-source "_cloud-foundry-on-your-desktop_" tool from Pivotal. This tool comes with RabbitMQ, MySQL and Spring Cloud Services out-of-the-box. Apps tested against PCF-Dev will run against Pivotal Cloud Foundry wilthout modification if the same backing-services are present on your target environment.
 
 # Status
 
