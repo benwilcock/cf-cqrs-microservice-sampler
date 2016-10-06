@@ -1,18 +1,18 @@
 # Building Scalable CQRS Microservices with Cloud Foundry
 
-This project demonstrates how to build cloud native Command & Query Responsibility Separation and Event Sourcing applications using Pivotal Cloud Foundry, Spring Cloud Services, Spring Boot and the Axon Framework. 
+This project demonstrates how to build cloud native Command & Query Responsibility Separation and Event Sourcing applications using Pivotal Cloud Foundry. 
 
-It combines together all of the following elements in order to produce one logical application - a **'Product Data Service'**.
+It combines the following technical elements in order to produce one logical application - a **'Product Data Service'**.
 
  - CQRS and Event Sourcing using the [Axon CQRS Framework](http://www.axonframework.org/)
- - [Spring Boot](http://projects.spring.io/spring-boot/) Microservices
- - Externalised 12-factor configuration using [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/)
+ - Microservices using [Spring Boot](http://projects.spring.io/spring-boot/)
+ - 12-Factor configuration using [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/)
  
-I'm using [PCF-Dev](https://pivotal.io/pcf-dev) for this project.
+I'm using [Pivotal PCF-Dev](https://pivotal.io/pcf-dev) for this demo.
  
-> PCF-Dev is a free open-source _cloud-foundry-on-your-desktop_ from Pivotal. It's designed for cloud developers and comes with RabbitMQ, MySQL and Spring Cloud Services built-in. Apps tested against PCF-Dev will run against Pivotal Cloud Foundry without modification (assuming the same backing-services are present).
+> **About PCF-Dev.** PCF-Dev is a free open-source _'cloud-foundry-on-your-desktop'_ application from Pivotal. It's designed for cloud developers, emulates Pivotal Cloud Foundry and comes with RabbitMQ, MySQL and Spring Cloud Services built-in. Apps tested against PCF-Dev will run against Pivotal Cloud Foundry without modification (assuming that the same backing-services required by your app are present).
 
-If you're not interested in the cloud (why?) then the original non-cloud project can be found here: https://github.com/benwilcock/microservice-sampler
+If you're not interested in the cloud (why not?) then the original non-PaaS version of this project can be found here: https://github.com/benwilcock/microservice-sampler
  
 # Getting Started
 
@@ -96,6 +96,34 @@ $ ./gradlew clean test assemble
 ````
 
 Notice how the 'commands' go to the command url (`command.local.pcfdev.io`) and the queries go to the query url (`query.local.pcfdev.io`)s. This means you can __scale__ the command and query apps separately depending on load.
+
+# Business Benefits
+
+There are several clear business benefits that make switching to Cloud Foundry an attractive option for this project.
+
+ - **Lower Maintenance**
+ 
+   - I don't have to script my own PaaS features (like auto-restart).
+   - I can provision my own backing-services (like MySQL etc.).
+   - I don't have to create, manage, secure or test container images.
+   - I can achieve Continuous Delivery and add value constantly.
+
+ - **Better Resiliance**
+ 
+   - Cloud Foundry will restart my apps for me if they crash.
+   - Cloud Foundry will scale my apps for me horizontally.
+   - Cloud Foundry supports zero downtime app upgrades (blue/green).
+   
+ - **Detailed Operational Insights**
+ 
+   - Cloud Foundry includes built in Metrics.
+   - Cloud Foundry supports external logging services like Splunk and Logstash.
+   
+ - **Lower Cost and Fewer Resources**
+ 
+   - Cloud Foundry uses cloud infrastructure like AWS, Azure, GCP etc. (and uses it very efficiently keeping costs low).
+   - Developers can be more productive and more in control.
+   - Operators spend less time on the 'scaffolding' and more time on real operational issues
 
 # About the Author
 
