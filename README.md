@@ -1,8 +1,6 @@
 # Building Scalable CQRS Microservices with Cloud Foundry
 
-**This is currently a Work In Progress!**
-
-This is a non-trivial suite of CQRS microservices that demonstrates how to build CQRS applications using Cloud Foundry and Spring Cloud Services, Spring Boot and the Axon Framework. 
+This project demonstrates one way in which you can build CQRS/ES applications using Cloud Foundry and Spring Cloud Services, Spring Boot and the Axon Framework. 
 
 It combines together all of the following elements in order to produce one logical application - a **Product Data Service**.
 
@@ -20,8 +18,6 @@ I'm in the process of porting the original code from here: https://github.com/be
  - Command Side: Working
  - Integration Test: Working
  - Cloud Based Config: Working
- - Service Registry: Not Started
- - Service Circuit Breaker: Not Started
  
 > Tested on PCF-Dev and PEZ environments. PCF-Dev expected.
  
