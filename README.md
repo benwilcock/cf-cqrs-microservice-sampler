@@ -82,6 +82,31 @@ I'm in the process of porting the original code from here: https://github.com/be
 
 > The tests should run and pass. Commands executed on the **command** side result in events being stored in the database and sent out via RabbitMQ. The **query** side is listening to RabbitMQ for these events, and then posts records into the Product materialised-view (it's own database).
 
+ - Use the "add" command to add a Product:
+ 
+`curl -X POST http://command.local.pcfdev.io:80/add/fb226b13-65f5-47bf-8a06-f97affaaf60f?name=MyTestProduct`
+
+ - Query for the Product you just added:
+
+`curl -X GET http://query.local.pcfdev.io:80/products/fb226b13-65f5-47bf-8a06-f97affaaf60f`
+
+> You should see the following JSON output:-
+
+````json
+{
+  "name" : "MyTestProduct",
+  "saleable" : false,
+  "_links" : {
+    "self" : {
+      "href" : "http://query.local.pcfdev.io/products/fb226b13-65f5-47bf-8a06-f97affaaf60f"
+    },
+    "product" : {
+      "href" : "http://query.local.pcfdev.io/products/fb226b13-65f5-47bf-8a06-f97affaaf60f"
+    }
+  }
+````
+
+Notice how the 'commands' go to the command url (`command.local.pcfdev.io`) and the queries go to the query url (`query.local.pcfdev.io`)s. This means you can __scale__ the command and query apps separately depending on load.
 
 # About the Author
 
