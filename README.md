@@ -1,6 +1,6 @@
 # Building Scalable CQRS Microservices with Cloud Foundry
 
-** Work In Progress! **
+**This is currently a Work In Progress!**
 
 This is a non-trivial suite of CQRS microservices that demonstrates how to build CQRS applications using Cloud Foundry and Spring Cloud Services, Spring Boot and the Axon Framework. 
 
