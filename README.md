@@ -2,11 +2,15 @@
 
 This project demonstrates how to build cloud native Command & Query Responsibility Separation and Event Sourcing applications using Pivotal Cloud Foundry.
 
-It combines the following technical elements in order to produce one logical application - a **'Product Data Service'**.
+It combines the following technical elements in order to produce one logical application - a **'Product Data Service'**...
 
  - CQRS and Event Sourcing using the [Axon CQRS Framework](http://www.axonframework.org/)
  - Microservices using [Spring Boot](http://projects.spring.io/spring-boot/)
  - 12-Factor configuration using [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/)
+ - Various other Spring Cloud things in the background like:-
+   - Spring Cloud Service Registry for service discovery (Netflix Eureka)
+   - Spring Cloud Bus (for push-enabled configuration changes)
+   - Spring Cloud Connectors (for connecting to backing-stores like MySQL)
  
 I'm using [Pivotal PCF-Dev](https://pivotal.io/pcf-dev) for this demo.
  
@@ -66,7 +70,11 @@ $ ./gradlew clean assemble
  
  `cf create-service p-config-server standard config -c ./config-server-setup.json`
  
-7. Now **"Push"** the project to your local cloud:
+7. Create a Spring Cloud Service Registry:
+
+ `cf create-service p-service-registry standard registry`
+ 
+8. Now **"Push"** the project to your local cloud:
   
  `cf push`
 

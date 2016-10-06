@@ -3,6 +3,7 @@ services:
   - config
   - rabbit
   - mysql
+  - registry
 applications:
 - name: query
   memory: 1G

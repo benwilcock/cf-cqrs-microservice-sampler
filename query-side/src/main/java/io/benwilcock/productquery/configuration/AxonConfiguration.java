@@ -7,7 +7,6 @@ import org.axonframework.eventhandling.amqp.spring.SpringAMQPConsumerConfigurati
 import org.axonframework.eventhandling.amqp.spring.SpringAMQPTerminal;
 import org.axonframework.serializer.json.JacksonSerializer;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
