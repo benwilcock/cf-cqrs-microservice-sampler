@@ -16,11 +16,11 @@ If you're not interested in the cloud (why not?) then the original non-PaaS vers
 
 If you'd like more general information on CQRS/ES Microservice architecture check out this [slideshare](http://www.slideshare.net/BenWilcock1/microservice-architecture-with-cqrs-and-event-sourcing).
  
-# Getting Started
+## Getting Started
 
 **To follow this tutorial you'll need a Mac, Linux or Windows PC with 16GB RAM, Java JDK 1.8 and Git.**
 
-## Install the required software
+### Install the required software
 
 1. Install the CF CLI command line tool (currently v6.22.1+) as instructed here: https://github.com/cloudfoundry/cli
  
@@ -30,7 +30,7 @@ If you'd like more general information on CQRS/ES Microservice architecture chec
  
 > Once you've installed these tools, you're ready to create a local development environment that mimics Pivotal Cloud Foundry.
 
-## Prepare the local cloud environment
+### Prepare the local cloud environment
 
 1. Checkout the source code for this project to your machine and build it: 
  
@@ -72,7 +72,7 @@ $ ./gradlew clean assemble
 
 > The push uses the `manifest.yml` file. This file tells the cf CLI where to find the apps to deploy and which backing-services to "bind" the apps to.
 
-## Test the app
+### Test the app
 
 1. Run the integration tests to check everything works: 
  
@@ -106,14 +106,14 @@ $ ./gradlew clean assemble
 
 Notice how the 'commands' go to the command url (`command.local.pcfdev.io`) and the queries go to the query url (`query.local.pcfdev.io`)s. This means you can __scale__ the command and query apps separately depending on load.
 
-# Business Benefits
+## Benefits
 
 There are several clear business benefits that make switching to Cloud Foundry an attractive option for this project.
 
  - **Lower Maintenance**
  
    - I don't have to script my own PaaS features (like auto-restart).
-   - I can provision my own backing-services (like MySQL etc.).
+   - I can provision my own backing-services (like MySQL etc.) without Ops.
    - I don't have to create, manage, secure or test container images.
    - I can achieve Continuous Delivery and add value constantly.
 
@@ -130,10 +130,11 @@ There are several clear business benefits that make switching to Cloud Foundry a
    
  - **Lower Cost and Fewer Resources**
  
-   - Cloud Foundry uses cloud infrastructure like AWS, Azure, GCP etc. (and uses it very efficiently keeping costs low).
-   - Developers can be more productive and more in control.
-   - Operators spend less time on the 'scaffolding' and more time on real operational issues
-
-# About the Author
+   - Cloud Foundry uses cloud infrastructure like AWS, Azure, GCP etc.
+   - Cloud Foundry uses cloud infrastructure efficiently, keeping running costs lows.
+   - Developers can be more productive and retain greater control.
+   - Operators can spend less time on the 'scaffolding' and more time on real operational issues.
+   
+## About the Author
 
 [Ben Wilcock](https://uk.linkedin.com/in/benwilcock) works for Pivotal as a Cloud Solutions Architect. Ben has a passion for microservices, cloud and mobile applications and helps [Pivotal's Cloud Foundry](http://pivotal.io/platform) customers to become more responsive, innovate faster and gain greater returns from their software investments. Ben is also a respected technology [blogger](http://benwilcock.wordpress.com) who's articles have featured in [DZone](https://dzone.com/users/296242/benwilcock.html), [Java Code Geeks](https://www.javacodegeeks.com/author/ben-wilcock/), [InfoQ](https://www.infoq.com/author/Ben-Wilcock) and more.
