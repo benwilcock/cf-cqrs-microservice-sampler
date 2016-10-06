@@ -32,11 +32,12 @@ If you'd like more general information on CQRS/ES Microservice architecture chec
 
 ## Prepare the local cloud environment
 
-1. Checkout the source code for this project and build it: 
+1. Checkout the source code for this project to your machine and build it: 
  
 ````bash
 $ git clone https://github.com/benwilcock/cf-cqrs-microservice-sampler.git
-$ ./gradlew clean test assemble
+$ cd cf-cqrs-microservice-sampler
+$ ./gradlew clean assemble
 ````
  
 > You **don't** need to install Gradle. The source code includes a `gradlew.sh` and a `gradlew.bat` file that you can use to run gradle commands. 
@@ -45,7 +46,7 @@ $ ./gradlew clean test assemble
  
   `cf dev start -s all`
  
-> Starting PCF-Dev takes about 8 minutes depending on your PC. It emulates complex cloud infrastructure in a local VirtualBox environemnt.
+> Starting PCF-Dev takes about 8 minutes depending on your PC. It emulates complex cloud infrastructure in a local VirtualBox environemnt. Once started it can be suspended and resumed to save you time.
  
 3. Attach to PCF-Dev from the cf CLI: 
  
@@ -61,9 +62,9 @@ $ ./gradlew clean test assemble
  
  `cf create-service p-rabbitmq standard rabbit`
  
-6. Setup the Spring Cloud Config backing-service in your local cloud (use the script provided, takes a few minutes - use `cf services` to check progress):
+6. Setup the Spring Cloud Config backing-service in your local cloud (takes a few minutes - use `cf services` to check progress):
  
- `config-server-setup.sh`
+ `cf create-service p-config-server standard config -c ./config-server-setup.json`
  
 7. Now **"Push"** the project to your local cloud:
   
