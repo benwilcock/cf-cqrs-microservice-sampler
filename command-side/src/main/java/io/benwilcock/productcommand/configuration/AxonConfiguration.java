@@ -45,11 +45,11 @@ public class AxonConfiguration {
 
     private static final String AMQP_CONFIG_KEY = "AMQP.Config";
 
-    @Value("${spring.application.queue}")
-    private String queueName;
-
-    @Value("${spring.application.exchange}")
+    @Value("${command.exchangeName}")
     private String exchangeName;
+
+    @Value("${command.queueName}")
+    private String queueName;
 
     @PersistenceContext(unitName = "default")
     EntityManager entityManager;
