@@ -4,6 +4,7 @@
 .idea
 /unused
 **/.DS_Store
+/lib
 
 # File Patterns
 *.class

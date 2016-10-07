@@ -3,6 +3,7 @@ build
 events
 .gradle
 .idea
+META-INF
 
 # File Patterns
 *.class
